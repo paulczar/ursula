@@ -77,6 +77,10 @@ This sets your proxy only for apt repositories:
 
 `common.apt_cache: http://10.230.7.181:3128`
 
+Note: The default OS for ursula is Ubuntu Precise, if you want Trusty set
+the env var `URSULA_BOX_NAME` to the name of your ubuntu trusty vagrant
+box before running vagrant.
+
 # More Docs
 
 See the [/doc](https://github.com/blueboxgroup/ursula/tree/master/doc) directory of this repo.
