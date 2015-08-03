@@ -1,0 +1,5 @@
+---
+- name: add any dependent repositories
+  apt_repository: repo="{{ item.repo }}" update_cache=yes
+                  state=absent
+  with_items: purge_repos

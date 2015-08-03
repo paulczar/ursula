@@ -7,7 +7,7 @@ cinder:
   api_workers: 5
   volume_group: cinder-volumes
   create_vg: true
-
+  volume_type: file
   source:
     rev: '7b1d7a31335bd8723551c9af5c270927ad830c3f'
   package:

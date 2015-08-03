@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   config.vm.define "workstation" do |workstation_config|
-    workstation_config.vm.box = "ursula-precise"
+    workstation_config.vm.box = BOX_NAME
     workstation_config.vm.box_url = BOX_URL
     workstation_config.vm.hostname = "workstation.ursula"
     workstation_config.vm.provider "virtualbox" do |v|
@@ -50,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "allinone" do |allinone_config|
-    allinone_config.vm.box = "ursula-precise"
+    allinone_config.vm.box = BOX_NAME
     allinone_config.vm.box_url = BOX_URL
     allinone_config.vm.hostname = "allinone.ursula"
     allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   (1..NUM_CONTROLLERS).each do |i|
     config.vm.define "controller#{i}" do |controller_config|
-      controller_config.vm.box = "ursula-precise"
+      controller_config.vm.box = BOX_NAME
       controller_config.vm.box_url = BOX_URL
       controller_config.vm.hostname = "controller#{i}.ursula"
       controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
@@ -80,7 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   (1..NUM_COMPUTES).each do |i|
     config.vm.define "compute#{i}" do |compute_config|
-      compute_config.vm.box = "ursula-precise"
+      compute_config.vm.box = BOX_NAME
       compute_config.vm.box_url = BOX_URL
       compute_config.vm.hostname = "compute#{i}.ursula"
       compute_config.vm.network :private_network, ip: "172.16.0.11#{i}", :netmask => "255.255.255.0"
@@ -100,7 +100,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.customize ['storagectl', :id, '--name', 'SATA Controller', '--add', 'sata']
         v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
       end
-      swiftnode_config.vm.box = "ursula-precise"
+      swiftnode_config.vm.box = BOX_NAME
       swiftnode_config.vm.box_url = BOX_URL
       swiftnode_config.vm.hostname = "swift#{i}"
       swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.255.0"

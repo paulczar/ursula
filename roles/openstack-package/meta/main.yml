@@ -4,3 +4,5 @@ dependencies:
     repos:
       - repo: 'deb {{ apt_repos.blueboxcloud_giftwrap.repo }} {{ ansible_distribution_release }} main'
         key_url: '{{ apt_repos.blueboxcloud_giftwrap.key_url }}'
+    purge_repos:
+      - repo: 'deb http://repo.openstack.blueboxgrid.com/bbc precise main'
