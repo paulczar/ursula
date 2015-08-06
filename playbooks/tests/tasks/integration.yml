@@ -10,7 +10,7 @@
            /root/.ssh/id_rsa.pub
 
   - name: generate test security group
-    shell: . /root/stackrc; neutron security-group-create turtle-sec && 
+    shell: . /root/stackrc; neutron security-group-create turtle-sec &&
            neutron security-group-rule-create turtle-sec --remote-ip-prefix
            0.0.0.0/0
 
@@ -25,6 +25,10 @@
            external | awk '/ external / {print $2}' ); nova add-floating-ip
            turtle-stack ${FLOATING_IP}; sleep 60
 
+  - name: get floating IP
+    shell: . /root/stackrc; nova show turtle-stack | grep 'internal network' | awk '{ print $6 }'
+    register: turtle_ip
+
   - name: nova can create a volume via cinder
     shell: . /root/stackrc; nova volume-create --display-name=turtle-vol 2
 
@@ -37,13 +41,15 @@
            turtle-stack {{ turtle_vol.stdout }} auto
 
   - name: can ping instance
-    shell: . /root/stackrc; TURTLE_IP=$( nova list | awk
-           '/turtle-stack/ {print $13}' ); ping -c 5 ${TURTLE_IP}
+    shell: . /root/stackrc; TURTLE_IP={{ turtle_ip.stdout }}; ping -c 5 ${TURTLE_IP}
 
 # (due to 1450 MTU on VXLAN this doesn't work with recent version of SSH)
   - name: test instance can ping Google
-    shell: . /root/stackrc; TURTLE_IP=$( nova list | awk
-           '/turtle-stack/ {print $13}' ); ssh -o
+    shell: . /root/stackrc; TURTLE_IP={{ turtle_ip.stdout }}; ssh -o
            UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
            cirros@${TURTLE_IP} ping -c 5 www.google.com
     when: ansible_distribution_version == "12.04"
+
+
+
+nova show turtle-stack | grep 'internal network' | awk '{ print $6 }'
