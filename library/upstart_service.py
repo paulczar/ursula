@@ -47,7 +47,11 @@ end script
 respawn
 {% endif -%}
 
-exec start-stop-daemon --start --chuid {{ user }} {{ pidfile }} --exec {{ cmd }} {{ args }}
+{% if bash -%}
+exec su -s /bin/bash -c '{{ cmd }} {{ args }}' {{ user }}
+{% else %}
+exec start-stop-daemon --start --chuid {{ user }} {{ pidfile }} --exec {{ cmd }} -- {{ args }}
+{% endif -%}
 """
 
 def main():
@@ -58,6 +62,7 @@ def main():
             cmd=dict(default=None, required=True),
             args=dict(default=None),
             user=dict(default=None, required=True),
+            bash=dict(default=False, type='bool'),
             config_dirs=dict(default=None),
             config_files=dict(default=None),
             description=dict(default=None),
@@ -101,7 +106,7 @@ def main():
         args = ''
         if module.params['args'] or module.params['config_dirs'] or \
            module.params['config_files']:
-            args = '-- '
+            args = ''
             if module.params['args']:
                 args += module.params['args']
 

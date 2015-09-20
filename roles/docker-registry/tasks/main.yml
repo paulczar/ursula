@@ -1,0 +1,3 @@
+---
+- include: opensource.yml
+  when: docker_registry.type == 'opensource'

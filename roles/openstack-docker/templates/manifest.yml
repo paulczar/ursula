@@ -1,0 +1,23 @@
+---
+settings:
+  base_path: '/opt/bbc/openstack-{{ project_name }}/'
+  version: {{ openstack_docker.tag }}
+  force_overwrite: true
+  gerrit_dependencies: false
+  output_dir: /tmp/
+
+projects:
+  - name: {{ project_name }}
+    gitref: {{ openstack_source.project_rev }}
+    pip_dependencies:
+{% for package in openstack_source.python_dependencies %}
+{% if package.version is defined %}
+      - {{ package.name }}=={{ package.version }}
+{% else %}
+      - {{ package.name }}
+{% endif %}
+{% endfor %}
+    system_dependencies:
+{% for package in openstack_source.system_dependencies %}
+      - {{ package }}
+{% endfor %}

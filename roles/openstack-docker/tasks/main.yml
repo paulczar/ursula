@@ -1,0 +1,26 @@
+---
+- name: check if the image exists locally
+  shell: docker inspect {{ openstack_docker.registry }}/openstack-{{ project_name }}:{{ openstack_docker.tag }}
+  ignore_errors: true
+  register: image_exists
+
+- name: fetch { project_name }} docker image
+  docker_image: name={{ openstack_docker.registry }}/openstack-{{ project_name }}
+                tag={{ openstack_docker.tag }} state=pull
+  ignore_errors: true
+  register: image_pulled
+  when: image_exists.rc != 0
+
+- include: build.yml
+  when: image_pulled|failed
+
+- name: create functions
+  template: src=function.sh
+            dest=/etc/profile.d/{{ project_name }}.sh
+            mode=0755
+
+- name: create envs file
+  template: src=openstack.env
+            dest=/etc/docker/{{ project_name }}.env
+            mode=0600
+            owner=root

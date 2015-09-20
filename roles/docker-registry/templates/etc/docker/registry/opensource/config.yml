@@ -1,0 +1,33 @@
+---
+version: 0.1
+log:
+  level: {{ docker_registry.log.level }}
+  formatter: text
+  fields:
+    service: docker_registry
+    environment: {{ stack_env }}
+storage:
+{% if docker_registry.storage.type == "swift" %}
+  swift:
+    username: {{ docker_registry.storage.swift.username }}
+    password: {{ docker_registry.storage.swift.password }}
+    authurl: {{ docker_registry.storage.swift.authurl }}
+    tenant: {{ docker_registry.storage.swift.tenant }}
+    insecureskipverify: {{ docker_registry.storage.swift.insecureskipverify }}
+    container: {{ docker_registry.storage.swift.container }}
+    rootdirectory: {{ docker_registry.storage.swift.rootdirectory }}
+{% else %}
+  filesystem:
+    rootdirectory: /var/lib/registry
+{% endif %}
+http:
+  addr: 0.0.0.0:5000
+  secret: {{ docker_registry.secret }}
+{% if docker_registry.tls.enabled|bool %}
+  tls:
+    certificate: /path/to/x509/public
+    key: /path/to/x509/private
+    clientcas:
+      - /path/to/ca.pem
+      - /path/to/another/ca.pem
+{% endif %}

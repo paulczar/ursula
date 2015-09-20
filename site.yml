@@ -101,6 +101,13 @@
       tags: ['haproxy', 'infra']
       when: haproxy.enabled|bool
 
+- name: docker registry
+  hosts: controller
+  roles:
+    - role: docker-registry
+      tags: ['docker-registry']
+      when: docker_registry.enabled|default('False')|bool
+
 - name: iptables
   hosts: network
   roles:

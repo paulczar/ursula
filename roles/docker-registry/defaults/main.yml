@@ -1,0 +1,29 @@
+---
+docker_registry:
+  type: opensource
+  ip: "{{ primary_ip }}"
+  port: 3001
+  secret: mydevsecret
+  storage:
+    type: filesystem
+    swift:
+      authurl: https://tardis.openstack.blueboxgrid.com:5001/v2.0
+      username: username
+      password: password
+      tenant: tenant
+      insecureskipverify: False
+      container: docker_registry
+      rootdirectory: images
+  opensource:
+    image: registry
+    tag: 2.1
+  log:
+    level: debug
+  tls:
+    enabled: False
+    certificate: /path/to/x509/public
+    key: /path/to/x509/private
+    clientcas:
+      - /path/to/ca.pem
+      - /path/to/another/ca.pem
+  data_path: /opt/docker-registry/data

@@ -1,0 +1,24 @@
+---
+stack_env: example_docker
+floating_ip: 172.16.0.100
+
+xtradb:
+  sst_auth_password: asdf
+
+percona:
+  replication: False
+
+heat:
+  enabled: True
+  debug: True
+  openstack_install_method: docker
+
+heat-cfn:
+  enabled: False
+
+docker_registry:
+  enabled: True
+
+docker:
+  allow:
+    - vagrant

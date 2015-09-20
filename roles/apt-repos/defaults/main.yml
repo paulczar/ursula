@@ -2,8 +2,8 @@
 apt_repos:
   # All key_urls should be HTTPS to ensure we are retrieving the key we are expecting too
   docker:
-    repo: 'https://get.docker.com/ubuntu'
-    key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
+    repo: 'https://apt.dockerproject.org/repo'
+    key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x58118E89F3A912897C070ADBF76221572C52609D'
   bbg_ubuntu:
     repo: 'http://repo.openstack.blueboxgrid.com/ubuntu/'
     key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'

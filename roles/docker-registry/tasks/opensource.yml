@@ -1,0 +1,31 @@
+---
+- name: fetch docker registry image
+  docker_image: name={{ docker_registry.opensource.image }}
+                tag={{ docker_registry.opensource.tag }} state=pull
+
+- name: create registry config directory
+  file: dest=/etc/docker/registry/opensource state=directory
+        recurse=true
+
+- name: create docker registry data path
+  file: dest={{ docker_registry.data_path }} state=directory
+        recurse=true
+
+- name: write out registry config files
+  template: src={{ item }} dest=/etc/docker/registry/opensource mode=0644
+  with_fileglob: ../templates/etc/docker/registry/opensource/*
+
+- name: write out registry upstart script
+  template: src=etc/init/opensource_registry.conf
+            dest=/etc/init/docker-registry.conf
+  notify: restart docker registry
+
+- name: create upstart service link
+  file: src=/lib/init/upstart-job
+        dest=/etc/init.d/docker-registry
+        state=link
+
+- meta: flush_handlers
+
+- name: run docker registry
+  service: name=docker-registry state=started

@@ -1,0 +1,22 @@
+---
+- name: install giftwrap
+  pip: name="-e git://github.com/blueboxgroup/giftwrap.git@do_not_specify_version#egg=ansible"
+       virtualenv="/opt/giftwrap"
+
+- name: create giftwrap manifest folder
+  file: dest=/opt/giftwrap/manifests state=directory
+
+- name: create giftwrap manifest
+  template: dest=/opt/giftwrap/manifests/{{ project_name }}.yml
+            src=manifest.yml
+
+- name: build docker image
+  shell: /opt/giftwrap/bin/giftwrap build -m /opt/giftwrap/manifests/{{ project_name }}.yml -t docker
+
+- name: tag docker image
+  shell: docker tag openstack-{{ project_name }}:{{ openstack_docker.tag }} \
+           {{ openstack_docker.registry }}/openstack-{{ project_name }}:{{ openstack_docker.tag }}
+
+- name: push image to registry
+  shell: docker push {{ openstack_docker.registry }}/openstack-{{ project_name }}:{{ openstack_docker.tag }}
+

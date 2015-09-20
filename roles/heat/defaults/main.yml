@@ -1,6 +1,9 @@
 ---
 heat:
   enabled: False
+  openstack_install_method: "{{ openstack_install_method }}"
+  docker:
+    tag: kilo
   source:
     rev: 'stable/kilo'
     python_dependencies:

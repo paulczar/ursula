@@ -1,8 +1,19 @@
 ---
 - name: install docker
-  apt: pkg=lxc-docker
-  when: not docker.version
+  apt: pkg=docker-engine
 
-- name: install docker
-  apt: pkg=lxc-docker-{{ docker.version }}
-  when: docker.version
+- name: add users to docker group
+  user: name={{ item }} groups=docker append=yes
+  with_items: docker.allow
+
+- name: install docker python client
+  pip: name=docker-py
+
+- name: configure docker service
+  template: src=etc/default/docker dest=/etc/default/docker
+  notify: restart docker service
+
+- name: make sure docker is running
+  service: name=docker state=started
+
+- meta: flush_handlers

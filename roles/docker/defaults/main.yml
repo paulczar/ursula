@@ -1,3 +1,4 @@
 ---
 docker:
-  version: 1.4.1
+  allow: []
+#  opts: --insecure-registry localhost:5000
