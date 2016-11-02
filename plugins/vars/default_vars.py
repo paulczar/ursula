@@ -62,4 +62,4 @@ class VarsModule(object):
                                  loader=self.inventory._loader, host=host)
         if default_vars:
             return deep_update_dict(default_vars, inv_vars)
-        return group_vars
+        return inv_vars

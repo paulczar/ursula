@@ -4,9 +4,9 @@ heat:
   enabled: True
   heartbeat_timeout_threshold: 30
   source:
-    rev: 'stable/mitaka'
+    rev: 'stable/newton'
     constrain: True
-    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/newton/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
     system_dependencies: []

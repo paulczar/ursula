@@ -15,9 +15,9 @@
 
 #Set gateway for each undercloud_cidr subnet. gateway is a member of undercloud_cidr list for every subnet.
 #Each host can belong to only one undercloud_cidr, so there will be only one nw_gw set per host.
-- name: set gateway address for multi subnet 
+- name: set gateway address for multi subnet
   set_fact: nw_gw="{{ item.gateway }}"
-  when: (update_routes|default('false')|bool) and ((ansible_default_ipv4.network ==  ( item.cidr | ipaddr('network') ))) 
+  when: (update_routes|default('false')|bool) and ((ansible_default_ipv4.network ==  ( item.cidr | ipaddr('network') )))
   with_items: "{{ undercloud_cidr }}"
 
 #Add or replace a static route to all undercloud_cidr subnets via the nw_gw of the current subnet.
@@ -28,7 +28,7 @@
 
 - name: Check if interface has its own config file
   stat: path=/etc/network/interfaces.d/{{ ansible_default_ipv4.interface }}.cfg
-  register: found_in_interfaces_d 
+  register: found_in_interfaces_d
   when: (update_routes|default('false')|bool)
 
 - name: Set network config file
