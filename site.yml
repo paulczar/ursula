@@ -18,7 +18,7 @@
   roles:
     - role: preflight-checks
       tags: ['always', 'precheck']
-  environment: "{{ env_vars|default({}) }}"  
+  environment: "{{ env_vars|default({}) }}"
 
 - name: common role for all hosts
   hosts: all:!vyatta-*
@@ -34,6 +34,9 @@
       when: serverspec.enabled|default("False")|bool
     - role: logging
       tags: ['common', 'logging']
+    - role: audit
+      tags: ['common', 'logging', 'audit']
+      when: audit.enabled|default('False')|bool
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
