@@ -99,3 +99,7 @@
 - name: update ca certificates
   command: update-ca-certificates
   when: os == 'ubuntu'
+
+- name: update ca certificates (rhel)
+  command: update-ca-trust
+  when: os == 'rhel'
