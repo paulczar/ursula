@@ -4,27 +4,32 @@
   changed_when: false
   failed_when: false
 
-- name: install dependencies
-  apt: pkg="hugepages"
-  when: ceph.disable_transparent_hugepage
-  register: result
-  until: result|succeeded
-  retries: 5
+# disable transparent hugepage
+- block:
+  - name: install dependencies
+    package: name={{ item }}
+    with_items: "{{ ceph.hugepage_pkgs[os] }}"
+    register: result
+    until: result|succeeded
+    retries: 5
 
-- name: disable transparent hugepage until next reboot
-  command: hugeadm --thp-never
-  when: ceph.disable_transparent_hugepage
-
-- name: disable transparent hugepages permanently
-  lineinfile: dest=/etc/default/grub
-    state=present
-    regexp="^GRUB_CMDLINE_LINUX_DEFAULT=\"(.*)\"$"
-    line="GRUB_CMDLINE_LINUX_DEFAULT=\"\1 transparent_hugepage=never\""
-    backrefs=yes
-  when: ceph.disable_transparent_hugepage
-
-- name: update grub config with changes
-  command: update-grub
+  - name: disable transparent hugepage until next reboot
+    command: hugeadm --thp-never
+  
+  - name: disable transparent hugepages permanently
+    lineinfile: dest=/etc/default/grub
+      state=present
+      regexp="^GRUB_CMDLINE_LINUX_DEFAULT=\"(.*)\"$"
+      line="GRUB_CMDLINE_LINUX_DEFAULT=\"\1 transparent_hugepage=never\""
+      backrefs=yes
+  
+  - name: update grub config with changes(debian)
+    command: update-grub
+    when: os == 'ubuntu'
+  
+  - name: update grub config with changes(redhat)
+    command: grub2-mkconfig -o /boot/grub2/grub.cfg
+    when: os == 'rhel'
   when: ceph.disable_transparent_hugepage
 
 - name: apply operating system tuning

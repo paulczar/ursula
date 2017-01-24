@@ -1,14 +1,18 @@
 ---
 ceph:
-
+  pylib_dir:
+    rhel: /usr/lib64/python2.7/site-packages/
+    ubuntu: /usr/lib/python2.7/dist-packages/
   enabled: false
   #disks:
   #  - sdb
   #  - sdc
   #  - sdd
-  #bcache_ssd_device: sdg 
+  #bcache_ssd_device: sdg
 
-  version: 10.2.3~bbc1
+  version:
+    ubuntu: 10.2.3~bbc1
+    rhel: 10.2.3
 
   openstack_keys:
     - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx'" }
@@ -16,18 +20,36 @@ ceph:
 
   journal_guid: 45b0969e-9b03-4f30-b4c6-b4b80ceff106
 
+  mon_service:
+    ubuntu: ceph-mon-all
+    rhel: ceph-mon.target
+  osd_service:
+    ubuntu: ceph-osd-all
+    rhel: ceph-osd.target
+
+  hugepage_pkgs:
+    ubuntu:
+      - hugepages
+    rhel:
+      - libhugetlbfs
+      - libhugetlbfs-utils
+
   # Packages
-  debian_pkgs:
+  depend_pkgs:
     - python-pycurl
     - ntp
     - hdparm
-  ceph_pkgs:
-    - ceph
-    - ceph-common
-  osd_pkgs:
+  osd_dep_pkgs:
     - parted
   bcache_pkgs:
     - bcache-tools
+  # ubuntu and redhat have different package version connector.
+  # for ceph as example
+  #   ubuntu: apt-get install ceph-common=10.2.3
+  #   redhat: yum     install ceph-common-10.2.3
+  pkg_version_connector:
+    ubuntu: "="
+    rhel: "-"
 
   # Ceph options
   cephx: true

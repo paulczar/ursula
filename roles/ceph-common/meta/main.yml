@@ -6,7 +6,9 @@ dependencies:
     when: logging.enabled|default(True)|bool
     service: ceph
     logdata: "{{ ceph.logs }}"
-  - role: apt-repos
+  - role: repos
     repos:
       - repo: 'deb {{ apt_repos.ceph.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ceph.key_url }}'
+    when: os == 'ubuntu'
+# as redhat already has ceph repo added, we don't need to add it here

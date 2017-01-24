@@ -1,8 +1,16 @@
 ---
 - name: restart ceph mons
-  service: name=ceph-mon-all state=restarted
-  when: ceph_socket.rc == 0 and not ceph.scaleout|default('False')|bool and not upgrade_ceph|bool
+  service: name={{ ceph.mon_service[os] }} state=restarted
+  when:
+    - "'ceph_monitors' in group_names"
+    - ceph_socket.rc == 0
+    - not ceph.scaleout|default('False')|bool
+    - not upgrade_ceph|bool
 
 - name: restart ceph osds
-  service: name=ceph-osd-all state=restarted
-  when: ceph_socket.rc == 0 and not ceph.scaleout|default('False')|bool and not upgrade_ceph|bool
+  service: name={{ ceph.osd_service[os] }} state=restarted
+  when:
+    - "'ceph_osds' in group_names"
+    - ceph_socket.rc == 0
+    - not ceph.scaleout|default('False')|bool
+    - not upgrade_ceph|bool

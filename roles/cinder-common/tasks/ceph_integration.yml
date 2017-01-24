@@ -1,7 +1,7 @@
 ---
 - name: import rados and rbd modules into cinder
   file:
-    src: /usr/lib/python2.7/dist-packages/{{ item }}
+    src: "{{ ceph.pylib_dir[os] }}{{ item }}"
     dest: /opt/openstack/current/cinder/lib/python2.7/site-packages/{{ item }}
     state: link
     owner: root
@@ -10,6 +10,7 @@
   with_items:
     - rados.so
     - rbd.so
+  when: openstack_install_method != 'distro'
 
 - name: remove modules those were used for Hammer
   file:
@@ -20,6 +21,7 @@
     - rados.pyc
     - rbd.py
     - rbd.pyc
+  when: openstack_install_method != 'distro'
 
 - name: fetch cinder keyring
   slurp: path=/etc/ceph/ceph.client.cinder.keyring

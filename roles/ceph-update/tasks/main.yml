@@ -11,14 +11,14 @@
 # tasks of ceph monitors
 - block:
   - name: stop ceph mon
-    service: name=ceph-mon-all state=stopped
+    service: name={{ ceph.mon_service[os] }} state=stopped
 
   - name: correct ceph dir owner
     file: path=/var/lib/ceph state=directory owner=ceph group=ceph recurse=yes
     when: upgrade_ceph2jewel|bool
 
   - name: start ceph mons
-    service: name=ceph-mon-all state=started enabled=yes
+    service: name={{ ceph.mon_service[os] }} state=started enabled=yes
   when: "'ceph_monitors' in group_names"
 
 # tasks of ceph osds
@@ -38,13 +38,13 @@
     delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
   - name: stop ceph osd
-    service: name=ceph-osd-all state=stopped
+    service: name={{ ceph.osd_service[os] }} state=stopped
 
   - include: ceph_owner.yml
     when: upgrade_ceph2jewel|bool
 
   - name: start ceph osds
-    service: name=ceph-osd-all state=started enabled=yes
+    service: name={{ ceph.osd_service[os] }} state=started enabled=yes
 
   # make sure ceph osd services are up before unset noout
   - name: make sure ceph osds are up

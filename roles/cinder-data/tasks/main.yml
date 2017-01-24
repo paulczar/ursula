@@ -19,7 +19,7 @@
   with_items:
     - cryptsetup
     - lvm2
-    - scsi-target-utils
+    - targetcli
     - nbd
     - iscsi-initiator-utils
     - qemu-kvm-tools
@@ -42,13 +42,13 @@
   notify: restart tgt service
 
 - name: ensure tgt service is running
-  service: name="{{ tgt_service }}" state=started
+  service: name="{{ cinder.tgt_service[os] }}" state=started
 
 - include: volume_group.yml
   when: cinder.create_vg|bool and ( cinder.fixed_key is not defined or (cinder.fixed_key is defined and "compute" not in group_names) )
 
 - name: iscsi start
-  service: name="{{ iscsi_service }}" state=started
+  service: name="{{ cinder.iscsi_service[os] }}" state=started
 
 - name: enable cinder encryption
   template: src=etc/cinder/cinder.encryption.conf dest=/etc/cinder/cinder.encryption.conf mode=0640
