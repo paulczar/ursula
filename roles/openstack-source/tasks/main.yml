@@ -38,18 +38,27 @@
   until: result|succeeded
   retries: 5
 
-- name: get constraints file
-  get_url:
-    url: "{{ upper_constraints }}"
-    dest: /opt/stack/constraints.txt
-    force: true
-  when: constrain | bool
+- block:
+  - name: write constraints file
+    copy:
+      src: files/constraints.txt
+      dest: /opt/stack/constraints.txt
+      force: true
+    when: not upper_constraints|bool
 
-- name: set pip constraints args
-  set_fact:
-    pip_extra_args: "{{ pip_extra_args }} -c /opt/stack/constraints.txt"
-  when: constrain | bool
+  - name: get constraints file
+    get_url:
+      url: "{{ upper_constraints }}"
+      dest: /opt/stack/constraints.txt
+      force: true
+    when: upper_constraints|bool
+  
+  - name: set pip constraints args
+    set_fact:
+      pip_extra_args: "{{ pip_extra_args }} -c /opt/stack/constraints.txt"
 
+  when: constrain | bool
+    
 - name: set code has changed fact
   set_fact:
     code_has_changed: True

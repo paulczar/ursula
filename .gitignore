@@ -13,3 +13,5 @@ ursula.log
 openstack
 *.swp
 *.swo
+.ssh_config
+.ssh_key

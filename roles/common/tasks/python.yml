@@ -13,15 +13,15 @@
 
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
-       extra_args='-i {{ openstack.pypi_mirror }}'
-  when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is defined  and ansible_distribution == 'Ubuntu'
+       extra_args="-i {{ openstack.pypi_mirror }}"
+  when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is defined  and ansible_distribution == "Ubuntu"
   register: result
   until: result|succeeded
   retries: 5
 
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
-       extra_args='-i {{ openstack.pypi_mirror }}'
+       extra_args="-i {{ openstack.pypi_mirror }}"
   when: ansible_distribution_version != "12.04"
   register: result
   until: result|succeeded
@@ -32,6 +32,14 @@
     set_fact:
       pip_extra_args: " -i {{ openstack.pypi_mirror }}"
     when: openstack.pypi_mirror is defined
+
+  - name: update pip
+    pip: name=pip version={{ common.pip_version }}
+         extra_args="-i {{ openstack.pypi_mirror }}"
+         virtualenv="{{ common.python.base_venv }}"
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: upgrade setuptools for base venv (osp)
     pip:
@@ -51,7 +59,19 @@
     register: result
     until: result|succeeded
     retries: 5
-  when: openstack_install_method == 'distro'
+
+  - name: install shade bits for ansible modules
+    pip:
+      name: "{{ item }}"
+      virtualenv: "{{ common.python.base_venv }}"
+    with_items:
+      - shade>=1.9.0
+    register: result
+    until: result|succeeded
+    retries: 5
+
+
+  when: openstack_install_method == "distro"
 
 - block:
   - name: root user pip config directory
@@ -129,6 +149,7 @@
     pip:
       name: "{{ item }}"
     with_items:
+      - six>=1.10.0
       - shade>=1.9.0
     register: result
     until: result|succeeded

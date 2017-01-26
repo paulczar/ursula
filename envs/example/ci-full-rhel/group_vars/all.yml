@@ -10,8 +10,8 @@ state_path_base: /opt/stack/data
 validate_certs: false
 
 rhn_subscription:
-  username: XXXXXXX
-  password: XXXXXXX
+  username: "{{ rhn_user }}" 
+  password: "{{ rhn_pass }}"
 
 etc_hosts:
   - name: "{{ fqdn }}"
