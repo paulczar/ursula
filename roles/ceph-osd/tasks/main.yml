@@ -3,23 +3,21 @@
 - include: pool_names.yml
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
   when: inventory_hostname == groups['ceph_osds'][0]
-  tags: ['monitoring', 'openstack', 'control', 'glance', 'cinder', 'cinder-data', 'nova', 'data', 'openstack-setup']
+  tags: ['monitoring', 'openstack', 'control', 'glance', 'cinder', 'cinder-data', 'nova', 'nova-data', 'data', 'openstack-setup']
 
 - name: verify disks have been provided
   fail: msg="please provide osd disks"
-  when: ceph.disks is not defined
+  when: ceph.disks is not defined or ceph.disks|length <= 0
 
 - name: install dependencies
-  apt: pkg={{ item }}
-       state=present
-  with_items: "{{ ceph.osd_pkgs }}"
+  package: name={{ item }} state=present
+  with_items: "{{ ceph.osd_dep_pkgs }}"
   register: result
   until: result|succeeded
   retries: 5
 
 - name: install bcache dependencies
-  apt: pkg={{ item }}
-       state=present
+  package: name={{ item }} state=present
   with_items: "{{ ceph.bcache_pkgs }}"
   when: "'ceph_osds_hybrid' in group_names"
   register: result

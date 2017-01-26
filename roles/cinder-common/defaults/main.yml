@@ -13,6 +13,15 @@ cinder:
   create_vg: False
   common_volume_name: True
   allow_availability_zone_fallback: True
+  iscsi_helper:
+    ubuntu: tgtadm
+    rhel: targetcli
+  tgt_service:
+    ubuntu: tgt
+    rhel: target
+  iscsi_service:
+    ubuntu: open-iscsi
+    rhel: iscsid
   alternatives:
       - cinder-all
       - cinder-api

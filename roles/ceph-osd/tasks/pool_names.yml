@@ -41,7 +41,7 @@
   when: result_first_osd_host is defined and item | search(result_first_osd_host.stdout)
 
 # there is potential risk of host name match, do a check here
-- name: pool name should be defined here if only default pool exists
+- name: pool name should have been defined here if only default pool exists
   assert:
     that:
       - ssd_pool is defined

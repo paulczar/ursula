@@ -59,12 +59,20 @@
   with_items:
     - done
     - upstart
+  when: os == 'ubuntu'
 
-- name: ensure ceph-mon service enabled and started
+- name: ensure ceph-mon service enabled and started(debian)
   service: name=ceph-mon
            state=started
            enabled=yes
            args=id={{ ansible_hostname }}
+  when: os == 'ubuntu'
+
+- name: ensure ceph-mon service enabled and started(redhat)
+  service: name=ceph-mon@{{ ansible_hostname }}
+           state=started
+           enabled=yes
+  when: os == 'rhel'
 
 - name: wait for client.admin key exists
   wait_for: path=/etc/ceph/ceph.client.admin.keyring

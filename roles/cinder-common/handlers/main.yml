@@ -15,7 +15,7 @@
   with_nested:
     - "{{ play_hosts }}"
     - ['cinder-api', 'cinder-scheduler', 'cinder-volume']
-    
+
 - name: restart cinder services
   service:
     name: "{{ item[1] }}"
@@ -50,4 +50,4 @@
   with_items: "{{ play_hosts }}"
 
 - name: restart tgt service
-  service: name="{{ tgt_service }}" state=restarted
+  service: name="{{ cinder.tgt_service[os] }}" state=restarted

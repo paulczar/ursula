@@ -204,7 +204,7 @@
         - symlink
 
 - name: openstack client tools
-  hosts: all:!vyatta-*
+  hosts: all:!vyatta-*:!ceph_monitors:!ceph_osds
   any_errors_fatal: true
   roles:
     - role: client
