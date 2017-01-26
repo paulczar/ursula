@@ -14,14 +14,10 @@ neutron:
   enable_external_interface: True
   lbaas:
     enabled: False
-  source:
-    upper_constraints: ~
 
 keystone:
   uwsgi:
     method: port
-  source:
-    upper_constraints: ~
 
 common:
   hwraid:
@@ -53,43 +49,10 @@ haproxy:
 
 heat:
   enabled: True
-  source:
-    upper_constraints: ~
 
 ironic:
   enabled: False
-  source:
-    upper_constraints: ~
 
 cinder:
   enabled: False
-  source:
-    upper_constraints: ~
 
-glance:
-  source:
-    upper_constraints: ~
-
-horizon:
-  source:
-    upper_constraints: ~
-
-swift:
-  source:
-    upper_constraints: ~
-
-magnum:
-  source:
-    upper_constraints: ~
-
-ceilometer:
-  source:
-    upper_constraints: ~
-
-aodh:
-  source:
-    upper_constraints: ~
-
-nova:
-  source:
-    upper_constraints: ~
